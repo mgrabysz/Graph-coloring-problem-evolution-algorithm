@@ -26,7 +26,14 @@ class Graph:
     :param color_scheme: list of colors of adequate vertexes
     :type color_scheme: list[str]
     """
-    def __init__(self, nodes=25, probability=0.1, color_scheme_numeric=None, seed=None):
+    def __init__(
+        self,
+        nodes=25,
+        probability=0.1,
+        color_scheme_numeric=None,
+        seed=None
+    ):
+
         self._graph = nx.erdos_renyi_graph(nodes, probability, seed=seed)
         self._number_of_nodes = nodes
         self._edges = self._graph.edges
@@ -42,6 +49,10 @@ class Graph:
             self._color_scheme = None
 
     def set_color_scheme(self, new_color_scheme):
+
+        if len(new_color_scheme) != self._number_of_nodes:
+            raise MalformedParametersError
+
         self._color_scheme = new_color_scheme
 
     def color_scheme(self, color_scheme_numeric):
@@ -73,4 +84,3 @@ class Graph:
             plt.savefig(png_file)
 
         plt.clf()
-
