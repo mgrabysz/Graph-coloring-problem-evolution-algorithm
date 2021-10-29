@@ -55,6 +55,9 @@ class Graph:
 
         self._color_scheme = new_color_scheme
 
+    def number_of_nodes(self):
+        return self._number_of_nodes
+
     def color_scheme(self, color_scheme_numeric):
 
         shuffled_colors = sample(COLORS, self._number_of_nodes)
