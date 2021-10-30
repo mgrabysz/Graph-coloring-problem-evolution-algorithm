@@ -36,7 +36,7 @@ class Graph:
 
         self._graph = nx.erdos_renyi_graph(nodes, probability, seed=seed)
         self._number_of_nodes = nodes
-        self._edges = self._graph.edges
+        self._edges = self._graph.edges()
 
         if color_scheme_numeric:
 
@@ -57,6 +57,9 @@ class Graph:
 
     def number_of_nodes(self):
         return self._number_of_nodes
+
+    def edges(self):
+        return self._edges
 
     def color_scheme(self, color_scheme_numeric):
 
