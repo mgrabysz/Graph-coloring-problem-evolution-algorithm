@@ -19,7 +19,7 @@ class Database:
         mutation_ind_prob,
         mutation_elem_prob,
         iterations,
-        seed
+        seed=None
     ):
         self.population_size = population_size
         self.individual_size = individual_size
@@ -37,6 +37,15 @@ class Database:
 
     def set_time(self, new_time):
         self.time = new_time
+
+    def set_final_individual_core(self, new_core):
+        self.final_individual_core = new_core
+
+    def set_final_individual_rate(self, new_rate):
+        self.final_individual_rate = new_rate
+
+    def set_seed(self, new_seed):
+        self.seed = new_seed
 
     def write_to_json(self, path):
 

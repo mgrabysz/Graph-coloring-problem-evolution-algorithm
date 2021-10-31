@@ -1,12 +1,16 @@
-from matplotlib.pyplot import cool
-from networkx.algorithms.bipartite.basic import color
-from graph import Graph
-from evolutionary_algorithm import Algorithm
-from random import randint
+from evolutionary_algorithm import evolutionary_algorithm
 
 if __name__ == "__main__":
-    graph = Graph(nodes=5, seed=1)
-    algorithm = Algorithm(graph=graph, population_size=4, seed=1)
 
-    actual_population = algorithm.initialize_randomly()
-    print(actual_population)
+    example_edges = [(1, 2), (3, 4), (5, 6), (7, 8), (9, 10)]
+
+    dupabase, winner = evolutionary_algorithm(
+        iterations=100000,
+        edges=example_edges,
+        seed=1
+    )
+
+    dupabase.write_to_json('dupa.json')
+
+    print(winner)
+    print(winner.fitness_rate)

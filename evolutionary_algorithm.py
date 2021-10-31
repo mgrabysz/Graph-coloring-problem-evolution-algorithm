@@ -1,14 +1,22 @@
 from random import randint
 import random
+from database_io import Database
+from copy import deepcopy
 
 
 class Individual:
     def __init__(self, core):
         self.core = core        # list
-        self.fitness = None     # integer
+        self.fitness_rate = None     # integer
 
     def __str__(self):
         return str(self.core)
+
+    def set_fitness_rate(self, new_fitness):
+        self.fitness_rate = new_fitness
+
+    def fitness_rate(self):
+        return self.fitness_rate
 
 
 def decision(probability):
@@ -67,19 +75,20 @@ def reproduction(
     for _ in range(population_size):
         opponent_1 = random.choice(population)
         opponent_2 = random.choice(population)
-        fitness_1 = fitness(opponent_1, individual_size, edges)
-        fitness_2 = fitness(opponent_2, individual_size, edges)
+        fitness_1 = opponent_1.fitness_rate
+        fitness_2 = opponent_2.fitness_rate
 
         if fitness_1 < fitness_2:
             # opponent_1 is better
-            new_population.append(opponent_1)
+            winner = deepcopy(opponent_1)
         elif fitness_1 > fitness_2:
             # opponent 2 is better
-            new_population.append(opponent_2)
+            winner = deepcopy(opponent_2)
         else:
             # opponents are equally good
-            winner = random.choice([opponent_1, opponent_2])
-            new_population.append(winner)
+            winner = deepcopy(random.choice([opponent_1, opponent_2]))
+
+        new_population.append(winner)
 
     return new_population
 
@@ -112,14 +121,107 @@ def mutation(
         if decision(mutation_ind_prob):
             _mutate(individual, individual_size, mutation_elem_prob)
 
+
 # =====================================================================
 
 
 def evolutionary_algorithm(
+    iterations,
+    edges,
     population_size=20,
     individual_size=25,
     mutation_ind_prob=0.05,
     mutation_elem_prob=0.04,
     seed=None
 ):
-    pass
+    """
+    Main fuction performing evolutionary algorithm
+    """
+
+    random.seed(seed)
+
+    database = Database(
+        population_size=population_size,
+        individual_size=individual_size,
+        mutation_ind_prob=mutation_ind_prob,
+        mutation_elem_prob=mutation_elem_prob,
+        iterations=iterations,
+        seed=seed
+    )
+
+    current_population = initialize_randomly(
+        population_size,
+        individual_size,
+        seed
+    )
+    current_best_fitness = individual_size + 1
+    current_best_individual = None
+    fitness_rates_sum = 0
+
+    # finding the best individual
+    for individual in current_population:
+
+        fitness_rate = fitness(individual, individual_size, edges)
+        individual.set_fitness_rate(fitness_rate)
+        fitness_rates_sum += fitness_rate
+
+        if fitness_rate < current_best_fitness:
+            current_best_fitness = fitness_rate
+            current_best_individual = deepcopy(individual)
+
+    # save average fitness rate of actual population
+    average_fitness = fitness_rates_sum / population_size
+    database.add_log(average_fitness)
+
+    # main loop
+    for _ in range(iterations):
+
+        if seed:
+            seed = seed + 1
+
+        # reproduction
+        new_population = reproduction(
+            population=current_population,
+            population_size=population_size,
+            individual_size=individual_size,
+            edges=edges,
+            seed=seed
+        )
+
+        # mutation
+        mutation(
+            population=new_population,
+            population_size=population_size,
+            individual_size=individual_size,
+            mutation_ind_prob=mutation_ind_prob,
+            mutation_elem_prob=mutation_elem_prob,
+            seed=seed
+        )
+
+        # prepare to calculate average fitness of actual population
+        fitness_rates_sum = 0
+
+        # finding the best
+        for individual in new_population:
+
+            fitness_rate = fitness(individual, individual_size, edges)
+            individual.set_fitness_rate(fitness_rate)
+            fitness_rates_sum += fitness_rate
+
+            if fitness_rate < current_best_fitness:
+                current_best_fitness = fitness_rate
+                current_best_individual = deepcopy(individual)
+
+        # save average fitness rate of actual population
+        average_fitness = fitness_rates_sum / population_size
+        database.add_log(average_fitness)
+
+        # replace population
+        current_population = new_population
+
+    # store data
+    best_core = current_best_individual.core
+    database.set_final_individual_core(best_core)
+    database.set_final_individual_rate(current_best_fitness)
+
+    return database, current_best_individual
