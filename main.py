@@ -1,16 +1,16 @@
 from evolutionary_algorithm import evolutionary_algorithm
+from graph import Graph
 
 if __name__ == "__main__":
 
-    example_edges = [(1, 2), (3, 4), (5, 6), (7, 8), (9, 10)]
+    my_graph = Graph(seed=1)
+    edges = my_graph.edges()
 
-    dupabase, winner = evolutionary_algorithm(
-        iterations=100000,
-        edges=example_edges,
-        seed=1
+    database, scheme = evolutionary_algorithm(
+        iterations=200000,
+        edges=edges,
     )
 
-    dupabase.write_to_json('dupa.json')
-
-    print(winner)
-    print(winner.fitness_rate)
+    database.write_to_json("First graph.json")
+    my_graph.set_color_scheme(scheme.core)
+    my_graph.draw("First graph", save=True)

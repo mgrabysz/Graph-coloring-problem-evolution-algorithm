@@ -2,6 +2,7 @@ from random import randint
 import random
 from database_io import Database
 from copy import deepcopy
+import time
 
 
 class Individual:
@@ -137,6 +138,7 @@ def evolutionary_algorithm(
     """
     Main fuction performing evolutionary algorithm
     """
+    start = time.time()
 
     random.seed(seed)
 
@@ -223,5 +225,10 @@ def evolutionary_algorithm(
     best_core = current_best_individual.core
     database.set_final_individual_core(best_core)
     database.set_final_individual_rate(current_best_fitness)
+    database.set_edges(edges)
+
+    end = time.time()
+    duration = end - start
+    database.set_time(duration)
 
     return database, current_best_individual

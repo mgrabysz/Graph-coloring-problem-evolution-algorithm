@@ -53,7 +53,7 @@ class Graph:
         if len(new_color_scheme) != self._number_of_nodes:
             raise MalformedParametersError
 
-        self._color_scheme = new_color_scheme
+        self._color_scheme = self.color_scheme(new_color_scheme)
 
     def number_of_nodes(self):
         return self._number_of_nodes
@@ -83,10 +83,34 @@ class Graph:
 
         plt.title(title)
 
-        if show:
-            plt.show()
         if save:
             png_file = title + '.png'
             plt.savefig(png_file)
 
+        if show:
+            plt.show()
+
         plt.clf()
+
+
+class Set_Graph(Graph):
+    """
+    Graph in which user defines specific list of edges
+    """
+    def __init__(self, nodes, edges, color_scheme_numeric=None):
+        self._graph = nx.Graph()
+        self._number_of_nodes = nodes
+        for n in range(nodes):
+            self._graph.add_node(n)
+
+        self._graph.add_edges_from(edges)
+
+        if color_scheme_numeric:
+
+            if len(color_scheme_numeric) != nodes:
+                raise MalformedParametersError
+
+            self._color_scheme = self.color_scheme(color_scheme_numeric)
+
+        else:
+            self._color_scheme = None

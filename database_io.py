@@ -3,14 +3,7 @@ import json
 
 class Database:
     """
-    Class holds following parameters evolutionary_algorithm was called with:
-    population_size
-    individual_size
-    mutation_ind_prob
-    mutation_elem_prob
-    seed
-
-
+    Class holds parameteres about execution of evolurtionary algorithm
     """
     def __init__(
         self,
@@ -31,6 +24,7 @@ class Database:
         self.final_individual_core = None
         self.final_individual_rate = None
         self.time = None
+        self.edges = None
 
     def add_log(self, value):
         self.fitness_rates.append(value)
@@ -47,6 +41,9 @@ class Database:
     def set_seed(self, new_seed):
         self.seed = new_seed
 
+    def set_edges(self, new_edges):
+        self.edges = new_edges
+
     def write_to_json(self, path):
 
         database_data = {
@@ -56,9 +53,9 @@ class Database:
             'mutation_elem_prob': self.mutation_elem_prob,
             'iterations': self.iterations,
             'seed': self.seed,
+            'execution_time': self.time,
             'final_individual_rate': self.final_individual_rate,
             'final_individual_core': self.final_individual_core,
-            'execution_time': self.time,
             'fitness_rates': self.fitness_rates
         }
 
