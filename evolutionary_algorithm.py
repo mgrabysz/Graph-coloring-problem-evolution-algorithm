@@ -148,6 +148,7 @@ def evolutionary_algorithm(
         mutation_ind_prob=mutation_ind_prob,
         mutation_elem_prob=mutation_elem_prob,
         iterations=iterations,
+        edges=edges,
         seed=seed
     )
 
@@ -225,7 +226,6 @@ def evolutionary_algorithm(
     best_core = current_best_individual.core
     database.set_final_individual_core(best_core)
     database.set_final_individual_rate(current_best_fitness)
-    database.set_edges(edges)
 
     end = time.time()
     duration = end - start
