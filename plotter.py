@@ -20,7 +20,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     y, x = load_output_from_json(args.path)
-    plt.plot(x, y)
+    plt.scatter(x[::50], y[::50], s=1)
     plt.ylabel("average fitness rate in population")
     plt.xlabel("iterations")
     plt.title(args.title)

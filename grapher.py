@@ -29,4 +29,4 @@ if __name__ == "__main__":
         color_scheme_numeric=color_scheme_numeric
     )
 
-    graph.draw(title=str(args.title), labels=True, save=False)
+    graph.draw(title=str(args.title), labels=True, save=True)

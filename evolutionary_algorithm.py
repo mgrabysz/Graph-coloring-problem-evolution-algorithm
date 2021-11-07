@@ -131,8 +131,8 @@ def evolutionary_algorithm(
     edges,
     population_size=20,
     individual_size=25,
-    mutation_ind_prob=0.05,
-    mutation_elem_prob=0.04,
+    mutation_ind_prob=0.2,
+    mutation_elem_prob=0.08,
     seed=None
 ):
     """
@@ -157,8 +157,11 @@ def evolutionary_algorithm(
         individual_size,
         seed
     )
-    current_best_fitness = individual_size + 1
-    current_best_individual = None
+    current_best_individual = deepcopy(random.choice(current_population))
+    current_best_fitness = fitness(
+        current_best_individual,
+        individual_size,
+        edges)
     fitness_rates_sum = 0
 
     # finding the best individual
