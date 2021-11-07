@@ -54,13 +54,17 @@ def fitness(individual, individual_size, edges):
     color) are evaluated as n+1 where n is number of nodes
     """
     # check every pair of connected nodes (every edge)
+    num_of_incorrect_pairs = 0
     for (u, v) in edges:
         if individual.core[u] == individual.core[v]:
-            return individual_size + 1
+            num_of_incorrect_pairs += 1
 
     # if individual is correct its fitness is number of different values
-    a_set = set(individual.core)
-    return len(a_set)
+    if num_of_incorrect_pairs == 0:
+        a_set = set(individual.core)
+        return len(a_set)
+    else:
+        return individual_size + num_of_incorrect_pairs
 
 
 def reproduction(
